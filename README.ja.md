@@ -27,7 +27,7 @@ gem install mahjong-render
 
 ```sh
 gem build mahjong-render.gemspec
-gem install --local ./mahjong-render-0.2.0.gem
+gem install --local ./mahjong-render-0.2.1.gem
 ```
 
 インストール後、次のコマンドで `hand.svg` を作成できます。
@@ -92,10 +92,10 @@ devcontainer、または保証対象の MRI Ruby・Bundler・`rsvg-convert` を�
 bundle install
 bundle exec rake lint test assets:check licenses:check example:build
 gem build mahjong-render.gemspec
-ruby script/check_package.rb mahjong-render-0.2.0.gem
+ruby script/check_package.rb mahjong-render-0.2.1.gem
 ```
 
 設計の経緯は [既存ライブラリの調査](docs/research/existing-renderers.md) と [ADR](docs/adr/) に記録しています。
 [公開手順](docs/release.md) には、タグから起動する Trusted Publishing の手順を記載しています。
 
-Copyright 2026 Maejima Kenya。Ruby コードとテキスト文書には [Apache-2.0](LICENSE) を適用します。同梱の牌画像と [README のプレビュー](examples/hand.png) は CC0-1.0 です。牌画像は [FluffyStuff/riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles) から採用しました。詳細は [第三者素材の告知](THIRD_PARTY_NOTICES.md)、[素材マニフェスト](assets/manifest.json)、[CC0 のライセンス本文](LICENSES/CC0-1.0.txt) を参照してください。
+Copyright 2026 kjun1。Ruby コードとテキスト文書には [Apache-2.0](LICENSE) を適用します。同梱の牌画像と [README のプレビュー](examples/hand.png) は CC0-1.0 です。牌画像は [FluffyStuff/riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles) から採用しました。詳細は [第三者素材の告知](THIRD_PARTY_NOTICES.md)、[素材マニフェスト](assets/manifest.json)、[CC0 のライセンス本文](LICENSES/CC0-1.0.txt) を参照してください。

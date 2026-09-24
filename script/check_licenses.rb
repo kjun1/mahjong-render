@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Copyright 2026 Maejima Kenya
+# Copyright 2026 kjun1
 # SPDX-License-Identifier: Apache-2.0
 
 require "bundler"
@@ -16,7 +16,7 @@ abort "missing artwork attribution" unless notices.include?("FluffyStuff") && no
 
 project = Gem::Specification.load(File.join(root, "mahjong-render.gemspec"))
 abort "incorrect project license metadata" unless project.licenses.sort == %w[Apache-2.0 CC0-1.0].sort
-abort "incorrect public author" unless project.authors == ["Maejima Kenya"]
+abort "incorrect public author" unless project.authors == ["kjun1"]
 
 allowed = %w[MIT BSD-2-Clause BSD-3-Clause Apache-2.0 Ruby CC0-1.0 ISC]
 specs = Bundler.load.specs.reject { |spec| spec.name == "mahjong-render" }

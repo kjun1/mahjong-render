@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Copyright 2026 Maejima Kenya
+# Copyright 2026 kjun1
 # SPDX-License-Identifier: Apache-2.0
 
 require_relative "lib/mahjong_render/version"
@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.version = MahjongRender::VERSION
   spec.summary = "Render riichi mahjong notation as self-contained SVG"
   spec.description = "A Ruby library for rendering compact mahjong notation to SVG, with an optional Asciidoctor block macro."
-  spec.authors = ["Maejima Kenya"]
+  spec.authors = ["kjun1"]
   spec.licenses = %w[Apache-2.0 CC0-1.0]
   spec.homepage = "https://github.com/kjun1/mahjong-render"
   spec.required_ruby_version = ">= 3.3"
