@@ -8,10 +8,11 @@ require "asciidoctor"
 require "mahjong_render/asciidoctor"
 
 class AsciidoctorTest < Minitest::Test
-  def test_example_builds_with_both_hands
+  def test_example_builds_with_group_spacing
     html = Asciidoctor.convert_file("examples/basic.adoc", safe: :safe, to_file: false)
-    assert_equal 2, html.scan("<svg ").length
+    assert_equal 3, html.scan("<svg ").length
     assert_includes html, "mahjong-render"
+    assert_equal %w[4356 4356 3021], html.scan(/<svg [^>]*\bwidth="([^"]+)"/).flatten
     refute_includes html, "mahjong::"
   end
 
@@ -19,6 +20,11 @@ class AsciidoctorTest < Minitest::Test
     assert_raises(MahjongRender::UnsupportedAttributeError) do
       Asciidoctor.convert("mahjong::1m[onclick=alert(1)]", safe: :safe)
     end
+  end
+
+  def test_numeric_gaps_pass_through_macro
+    html = Asciidoctor.convert("mahjong::1m|(0.25)2m|(0.5)3m[]", safe: :safe)
+    assert_equal ["1149"], html.scan(/<svg [^>]*\bwidth="([^"]+)"/).flatten
   end
 
   def test_rejects_non_html_backend

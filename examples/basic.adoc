@@ -7,3 +7,7 @@ mahjong::123m456p789s12344z[]
 == Red five
 
 mahjong::405m456p789s12344z[]
+
+== Groups with extra space
+
+mahjong::123m|456p|(0.5)789s[]

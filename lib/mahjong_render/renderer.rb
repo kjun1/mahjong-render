@@ -24,33 +24,53 @@ module MahjongRender
 
     module_function
 
-    def render(tiles)
-      width = (tiles.length * TILE_WIDTH) + ((tiles.length - 1) * GAP)
-      %(<svg #{svg_attributes(tiles, width)}>#{image_elements(tiles).join}</svg>)
+    def render(layout)
+      tiles = layout.tiles
+      width = (tiles.length * TILE_WIDTH) + ((tiles.length - 1) * GAP) + layout.gaps.sum { |gap| gap * TILE_WIDTH }
+      %(<svg #{svg_attributes(tiles, width)}>#{image_elements(layout).join}</svg>)
     end
 
     def svg_attributes(tiles, width)
       label = "Mahjong tiles: #{tiles.map { |tile| tile_label(tile) }.join(', ')}".gsub(/[&"<>]/, XML_ESCAPE)
-      %(xmlns="http://www.w3.org/2000/svg" width="#{width}" height="#{TILE_HEIGHT}" ) +
-        %(viewBox="0 0 #{width} #{TILE_HEIGHT}" role="img" aria-label="#{label}" style="max-width:100%;height:auto")
+      %(xmlns="http://www.w3.org/2000/svg" width="#{svg_number(width)}" height="#{TILE_HEIGHT}" ) +
+        %(viewBox="0 0 #{svg_number(width)} #{TILE_HEIGHT}" role="img" aria-label="#{label}" style="max-width:100%;height:auto")
     end
     private_class_method :svg_attributes
 
-    def image_elements(tiles)
+    def image_elements(layout)
       uris = {}
       front = encode_asset("Front.svg")
-      tiles.each_with_index.map do |tile, index|
-        x = index * (TILE_WIDTH + GAP)
+      layout.tiles.zip(tile_positions(layout.gaps)).map do |tile, x|
         uri = uris[tile] ||= data_uri(tile)
         image_element(x, front) + image_element(x, uri)
       end
     end
     private_class_method :image_elements
 
+    def tile_positions(gaps)
+      positions = [0]
+      gaps.each { |gap| positions << (positions.last + TILE_WIDTH + GAP + (gap * TILE_WIDTH)) }
+      positions
+    end
+    private_class_method :tile_positions
+
     def image_element(left, uri)
-      %(<image x="#{left}" y="0" width="#{TILE_WIDTH}" height="#{TILE_HEIGHT}" href="#{uri}" />)
+      %(<image x="#{svg_number(left)}" y="0" width="#{TILE_WIDTH}" height="#{TILE_HEIGHT}" href="#{uri}" />)
     end
     private_class_method :image_element
+
+    def svg_number(value)
+      return value.numerator.to_s if value.denominator == 1
+
+      whole, remainder = value.numerator.divmod(value.denominator)
+      fraction = +""
+      until remainder.zero?
+        digit, remainder = (remainder * 10).divmod(value.denominator)
+        fraction << digit.to_s
+      end
+      "#{whole}.#{fraction}"
+    end
+    private_class_method :svg_number
 
     def tile_label(tile)
       rank = tile[0]

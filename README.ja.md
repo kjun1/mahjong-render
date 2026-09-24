@@ -48,7 +48,9 @@ printf '= Mahjong hand\n\nmahjong::405m456p789s12344z[]\n' > hand.adoc
 asciidoctor -r mahjong_render/asciidoctor hand.adoc
 ```
 
-2つの手牌を含む [AsciiDoc の例](examples/basic.adoc) もあります。v0.1.0 の拡張は HTML5 の block macro に対応します。macro 属性、inline macro、PDF 出力には対応しません。
+間隔の違う牌列を含む [AsciiDoc の例](examples/basic.adoc) もあります。v0.1.0 の拡張は HTML5 の block macro に対応します。macro 属性、inline macro、PDF 出力には対応しません。
+
+牌のまとまりを少し離して見せるには、完成したグループの間に `|` を入れます。たとえば `mahjong::123m|456p|789s[]` と書きます。`|` は牌幅の4分の1の空白を追加し、`|(0.25)` と同じ幅です。幅を変える場合は `mahjong::123m|(0.5)456p[]` のように書けます。
 
 ## 記法とエラー
 
@@ -61,7 +63,7 @@ asciidoctor -r mahjong_render/asciidoctor hand.adoc
 | `5z`～`7z` | 白・發・中 |
 | `0m`、`0p`、`0s` | 各色の赤五 |
 
-同じ色の数字は `123m` のようにまとめられます。`10m` は `1m 0m` の2牌です。空白は完成したグループの間に入れられます。
+同じ色の数字は `123m` のようにまとめられます。`10m` は `1m 0m` の2牌です。空白は完成したグループの間に入れられますが、見た目の間隔は変わりません。通常の牌間は SVG の12単位のままで、`|` は75単位を追加します。`|(0)` は追加幅0です。数値指定には0以上の十進数を使い、区切りは完成したグループの間に置きます。
 
 不正な記法は `MahjongRender::NotationError` になります。`token`、先頭から0起算の文字位置 `position`、理由 `reason` を参照できます。たとえば `8z` は無効です。
 

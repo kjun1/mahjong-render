@@ -9,6 +9,6 @@ require_relative "mahjong_render/renderer"
 
 module MahjongRender
   def self.render(notation)
-    Renderer.render(Parser.parse(notation))
+    Renderer.render(Parser.parse_layout(notation))
   end
 end

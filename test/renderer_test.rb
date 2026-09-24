@@ -38,8 +38,36 @@ class RendererTest < Minitest::Test
     assert_equal MahjongRender.render("123m456p"), MahjongRender.render("123m456p")
   end
 
+  def test_separator_adds_quarter_tile_width
+    document = REXML::Document.new(MahjongRender.render("1m|2m"))
+    assert_equal "687", document.root.attributes["width"]
+    positions = document.get_elements("//image").map { |image| image.attributes["x"] }
+    assert_equal %w[0 0 387 387], positions
+    assert_equal MahjongRender.render("1m|2m"), MahjongRender.render("1m|(0.25)2m")
+  end
+
+  def test_numeric_and_multiple_separators
+    document = REXML::Document.new(MahjongRender.render("1m|2m|(0.5)3m"))
+    assert_equal "1149", document.root.attributes["width"]
+    positions = document.get_elements("//image").map { |image| image.attributes["x"] }
+    assert_equal %w[0 0 387 387 849 849], positions
+
+    decimal = REXML::Document.new(MahjongRender.render("1m|(0.333)2m"))
+    assert_equal "711.9", decimal.root.attributes["width"]
+    assert_equal "411.9", decimal.get_elements("//image")[2].attributes["x"]
+
+    full_tile = REXML::Document.new(MahjongRender.render("1m|(1)2m"))
+    assert_equal "912", full_tile.root.attributes["width"]
+    assert_equal "612", full_tile.get_elements("//image")[2].attributes["x"]
+  end
+
+  def test_zero_separator_and_whitespace_keep_normal_spacing
+    assert_equal MahjongRender.render("1m2m"), MahjongRender.render(" 1m\n2m ")
+    assert_equal MahjongRender.render("1m2m"), MahjongRender.render("1m|(0)2m")
+  end
+
   def test_svg_can_be_rasterized
-    stdout, stderr, status = Open3.capture3("rsvg-convert", "-f", "png", stdin_data: MahjongRender.render("405m123z"))
+    stdout, stderr, status = Open3.capture3("rsvg-convert", "-f", "png", stdin_data: MahjongRender.render("405m|(0.25)123z"))
     assert status.success?, stderr
     assert_equal "\x89PNG\r\n\x1A\n".b, stdout.b.byteslice(0, 8)
   end

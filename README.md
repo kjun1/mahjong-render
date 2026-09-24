@@ -54,7 +54,9 @@ printf '= Mahjong hand\n\nmahjong::405m456p789s12344z[]\n' > hand.adoc
 asciidoctor -r mahjong_render/asciidoctor hand.adoc
 ```
 
-See [the complete AsciiDoc example](examples/basic.adoc) for two hands.
+See [the complete AsciiDoc example](examples/basic.adoc) for hands with and without extra space.
+
+To show separate groups, insert `|` between complete tile groups: `mahjong::123m|456p|789s[]`. Each `|` adds a quarter tile width of empty space, the same as `|(0.25)`. Use `|(0.5)` for half a tile width or `|(1)` for a full tile width, for example `mahjong::123m|(0.5)456p[]`.
 
 The adapter supports the HTML5 backend. Macro attributes, inline macros, and PDF output are not part of v0.1.0. The Ruby rendering API does not load Asciidoctor.
 
@@ -69,7 +71,7 @@ The adapter supports the HTML5 backend. Macro attributes, inline macros, and PDF
 | `5z`–`7z` | White, Green, Red dragon |
 | `0m`, `0p`, `0s` | Red five in the corresponding suit |
 
-Digits can share a suit suffix: `123m` means `1m 2m 3m`, and `405m` means `4m 0m 5m`. Therefore `10m` is two tiles (`1m 0m`), not a rank-ten tile. Whitespace is allowed between complete groups, not between digits and their suit suffix.
+Digits can share a suit suffix: `123m` means `1m 2m 3m`, and `405m` means `4m 0m 5m`. Therefore `10m` is two tiles (`1m 0m`), not a rank-ten tile. Whitespace is allowed between complete groups but does not change their spacing. The normal gap remains 12 SVG units; `|` adds 75 units, and `|(0)` adds nothing. Numeric widths must be nonnegative decimal values. Separators must be between complete groups.
 
 Invalid notation raises `MahjongRender::NotationError`, with `token`, zero-based character `position`, and `reason` readers. Examples include `8z`, `123x`, `1m!`, a missing suit, and empty input. For example, `MahjongRender.render("8z")` raises an error with `token == "8z"` and `position == 0`.
 

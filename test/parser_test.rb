@@ -19,6 +19,29 @@ class ParserTest < Minitest::Test
     assert_equal %w[1m 2p 3z], MahjongRender::Parser.parse(" 1m\n2p\t3z ")
   end
 
+  def test_parse_still_returns_only_tiles_when_notation_has_gaps
+    assert_equal %w[1m 2m 3p 4s], MahjongRender::Parser.parse("12m|3p|(0.25)4s")
+    assert_equal %w[1m 0p], MahjongRender::Parser.parse("1m|0p")
+  end
+
+  def test_invalid_gap_positions
+    {
+      "|1m" => 0,
+      "1m|" => 2,
+      "1m||2m" => 3,
+      "1m|(0.5)" => 2,
+      "1m|()2m" => 2,
+      "1m|(.5)2m" => 2,
+      "1m|(-1)2m" => 2,
+      "1m|(1.)2m" => 2,
+      "1m|(1e2)2m" => 2,
+      "1m|(0.5" => 2
+    }.each do |input, position|
+      error = assert_raises(MahjongRender::NotationError) { MahjongRender.render(input) }
+      assert_equal position, error.position
+    end
+  end
+
   def test_invalid_honor_reports_first_bad_digit
     error = assert_raises(MahjongRender::NotationError) { MahjongRender.render("123m48z") }
     assert_equal "8z", error.token
