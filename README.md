@@ -29,7 +29,7 @@ To install a build from a local checkout:
 
 ```sh
 gem build mahjong-render.gemspec
-gem install --local ./mahjong-render-0.2.0.gem
+gem install --local ./mahjong-render-0.2.1.gem
 ```
 
 Render a hand from the command line or from Ruby:
@@ -106,7 +106,7 @@ Open this repository in a devcontainer, or use a supported MRI Ruby with Bundler
 bundle install
 bundle exec rake lint test assets:check licenses:check example:build
 gem build mahjong-render.gemspec
-ruby script/check_package.rb mahjong-render-0.2.0.gem
+ruby script/check_package.rb mahjong-render-0.2.1.gem
 ```
 
 The example HTML is written to `tmp/basic.html`. The test suite rasterizes a sample SVG to confirm the embedded vector artwork renders.
@@ -120,4 +120,4 @@ ruby -Ilib -rmahjong_render -e 'print MahjongRender.render("405m456p789s12344z")
 
 ## Third-party components and license
 
-Copyright 2026 Maejima Kenya. The project Ruby code and text documentation are licensed under [Apache-2.0](LICENSE). The bundled tile artwork and the [README preview](examples/hand.png) are CC0-1.0. The artwork comes from [FluffyStuff/riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles); see [third-party notices](THIRD_PARTY_NOTICES.md), [the asset manifest](assets/manifest.json), and [the CC0 legal text](LICENSES/CC0-1.0.txt). The gem metadata lists both licenses; each applies to the components described here.
+Copyright 2026 kjun1. The project Ruby code and text documentation are licensed under [Apache-2.0](LICENSE). The bundled tile artwork and the [README preview](examples/hand.png) are CC0-1.0. The artwork comes from [FluffyStuff/riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles); see [third-party notices](THIRD_PARTY_NOTICES.md), [the asset manifest](assets/manifest.json), and [the CC0 legal text](LICENSES/CC0-1.0.txt). The gem metadata lists both licenses; each applies to the components described here.

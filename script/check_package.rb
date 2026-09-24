@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Copyright 2026 Maejima Kenya
+# Copyright 2026 kjun1
 # SPDX-License-Identifier: Apache-2.0
 
 require "rubygems/package"
@@ -13,7 +13,7 @@ files = package.contents
 
 abort "unexpected gem name or version" unless spec.name == "mahjong-render" && spec.version.to_s == MahjongRender::VERSION
 abort "incorrect gem licenses" unless spec.licenses.sort == %w[Apache-2.0 CC0-1.0].sort
-abort "incorrect gem author" unless spec.authors == ["Maejima Kenya"]
+abort "incorrect gem author" unless spec.authors == ["kjun1"]
 abort "missing gem homepage" unless spec.homepage == "https://github.com/kjun1/mahjong-render"
 abort "incorrect Ruby requirement" unless spec.required_ruby_version.to_s == ">= 3.3"
 tag = "v#{MahjongRender::VERSION}"
