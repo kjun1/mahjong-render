@@ -27,6 +27,6 @@
 ## Choose a release trigger
 
 - **Manual event:** Open GitHub **Actions → Publish gem → Run workflow**, select the `main` branch, and enter version `0.1.0`. The workflow publishes the version in `main` without creating a Git tag.
-- **Tag push:** Push a tag matching the gem version, for example `git tag v0.1.0` followed by `git push origin v0.1.0`. The tag push publishes that version automatically.
+- **Tag push:** On `main`, push a tag matching the gem version, for example `git tag v0.1.0` followed by `git push origin v0.1.0`. The workflow requires the tagged commit to be on `main` before publishing.
 
 Both routes validate the version, run the release checks, build the gem, and use the `release` environment. If a version from this repository is already on RubyGems, a later run checks its source metadata and skips the duplicate push. The RubyGems version cannot be overwritten; bump the gem version for any subsequent release.

@@ -1,6 +1,7 @@
 # mahjong-render
 
 [![Gem Version](https://badge.fury.io/rb/mahjong-render.svg)](https://badge.fury.io/rb/mahjong-render)
+[![CI](https://github.com/kjun1/mahjong-render/actions/workflows/ci.yml/badge.svg)](https://github.com/kjun1/mahjong-render/actions/workflows/ci.yml)
 
 [日本語版 README](README.ja.md)
 

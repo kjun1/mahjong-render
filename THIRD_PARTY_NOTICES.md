@@ -11,6 +11,7 @@
 The original file names and SHA-256 hashes are recorded in [the asset manifest](assets/manifest.json). The files are copied without modification.
 
 The README preview at `examples/hand.png` is generated from these CC0 tile images and is also distributed under CC0-1.0. The project Ruby code and text documentation are Apache-2.0; neither license changes the terms of the other component.
+The repository social preview at `.github/social-preview.png` uses the same CC0 tile images. Its layout and text are Apache-2.0.
 
 ## Optional integration and development dependencies
 
