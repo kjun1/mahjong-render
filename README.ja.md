@@ -1,5 +1,7 @@
 # mahjong-render
 
+[![Gem Version](https://badge.fury.io/rb/mahjong-render.svg)](https://badge.fury.io/rb/mahjong-render)
+
 [English README](README.md)
 
 `mahjong-render` は、麻雀牌の compact notation から自己完結した SVG を作る Ruby ライブラリです。Ruby 版 Asciidoctor 向けの block macro も使えます。描画時に Node.js、ブラウザ、フォント、ネットワーク接続は不要です。

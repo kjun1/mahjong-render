@@ -1,5 +1,7 @@
 # mahjong-render
 
+[![Gem Version](https://badge.fury.io/rb/mahjong-render.svg)](https://badge.fury.io/rb/mahjong-render)
+
 [日本語版 README](README.ja.md)
 
 `mahjong-render` is a Ruby library that turns compact riichi mahjong notation into a self-contained SVG. It also provides an optional block macro for Ruby Asciidoctor. Rendering works offline and does not require Node.js, a browser, a font, or a network service.
