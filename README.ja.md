@@ -1,6 +1,6 @@
 # mahjong-render
 
-[![Gem Version](https://img.shields.io/gem/v/mahjong-render.svg)](https://rubygems.org/gems/mahjong-render)
+[![Gem Version](https://badge.fury.io/rb/mahjong-render.svg?icon=si%3Arubygems)](https://rubygems.org/gems/mahjong-render)
 [![CI](https://github.com/kjun1/mahjong-render/actions/workflows/ci.yml/badge.svg)](https://github.com/kjun1/mahjong-render/actions/workflows/ci.yml)
 
 [English README](README.md)
