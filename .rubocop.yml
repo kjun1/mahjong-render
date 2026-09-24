@@ -6,6 +6,7 @@ AllCops:
     - "assets/**/*"
     - "LICENSES/**/*"
     - "tmp/**/*"
+    - "vendor/**/*"
 
 Metrics/MethodLength:
   Max: 35
