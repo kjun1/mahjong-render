@@ -17,7 +17,7 @@ The `0m` in `405m` is a red five. The preview is generated from the library's SV
 
 ## Install and render
 
-Requirements: Ruby 3.2 or newer.
+Requirements: MRI Ruby 3.3 or newer. See [Compatibility and support](#compatibility-and-support) for the tested versions.
 
 Install the published gem from RubyGems:
 
@@ -29,7 +29,7 @@ To install a build from a local checkout:
 
 ```sh
 gem build mahjong-render.gemspec
-gem install --local ./mahjong-render-0.1.0.gem
+gem install --local ./mahjong-render-0.2.0.gem
 ```
 
 Render a hand from the command line or from Ruby:
@@ -61,7 +61,7 @@ See [the complete AsciiDoc example](examples/basic.adoc) for hands with and with
 
 To show separate groups, insert `|` between complete tile groups: `mahjong::123m|456p|789s[]`. Each `|` adds a quarter tile width of empty space, the same as `|(0.25)`. Use `|(0.5)` for half a tile width or `|(1)` for a full tile width, for example `mahjong::123m|(0.5)456p[]`.
 
-The adapter supports the HTML5 backend. Macro attributes, inline macros, and PDF output are not part of v0.1.0. The Ruby rendering API does not load Asciidoctor.
+The adapter supports the HTML5 backend. Macro attributes, inline macros, and PDF output are unsupported. The Ruby rendering API does not load Asciidoctor.
 
 ## Supported notation
 
@@ -78,6 +78,14 @@ Digits can share a suit suffix: `123m` means `1m 2m 3m`, and `405m` means `4m 0m
 
 Invalid notation raises `MahjongRender::NotationError`, with `token`, zero-based character `position`, and `reason` readers. Examples include `8z`, `123x`, `1m!`, a missing suit, and empty input. For example, `MahjongRender.render("8z")` raises an error with `token == "8z"` and `position == 0`.
 
+See the [public API reference](docs/api.md) for method and error details.
+
+## Compatibility and support
+
+The supported runtimes for v0.2.x are MRI Ruby 3.3, 3.4, and 4.0. The optional Asciidoctor adapter is tested with Ruby Asciidoctor 2.x and its HTML5 backend. Other Ruby implementations, Asciidoctor versions, and backends are outside the supported set. Ruby 3.2 is no longer supported because it has reached upstream end of life.
+
+During the 0.x series, breaking changes are announced in a minor release. Fixes and security updates are provided only for the latest minor release line; v0.2.x supersedes v0.1.x. See [support information](SUPPORT.md), the [security policy](SECURITY.md), and the [code of conduct](CODE_OF_CONDUCT.md).
+
 ## Architecture
 
 ```text
@@ -92,17 +100,17 @@ The parser and SVG composer are intentionally small. Existing renderers were eva
 
 ## Development
 
-Open this repository in a devcontainer, or use Ruby 3.2 or newer with Bundler and `rsvg-convert` installed:
+Open this repository in a devcontainer, or use a supported MRI Ruby with Bundler and `rsvg-convert` installed:
 
 ```sh
 bundle install
 bundle exec rake lint test assets:check licenses:check example:build
 gem build mahjong-render.gemspec
-ruby script/check_package.rb mahjong-render-0.1.0.gem
+ruby script/check_package.rb mahjong-render-0.2.0.gem
 ```
 
 The example HTML is written to `tmp/basic.html`. The test suite rasterizes a sample SVG to confirm the embedded vector artwork renders.
-The [release guide](docs/release.md) describes the manual and tag-triggered Trusted Publishing workflows.
+The [release guide](docs/release.md) describes the tag-triggered Trusted Publishing workflow.
 
 To regenerate the README preview with `rsvg-convert`:
 
