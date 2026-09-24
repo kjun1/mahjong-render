@@ -1,0 +1,33 @@
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false
+  TargetRubyVersion: 3.2
+  Exclude:
+    - "assets/**/*"
+    - "LICENSES/**/*"
+    - "tmp/**/*"
+
+Metrics/MethodLength:
+  Max: 35
+
+Layout/LineLength:
+  Max: 140
+
+Style/Documentation:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Metrics/AbcSize:
+  Exclude:
+    - "lib/mahjong_render/parser.rb"
+    - "test/**/*"
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - "lib/mahjong_render/parser.rb"
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - "lib/mahjong_render/parser.rb"

@@ -1,0 +1,15 @@
+name: Feature request
+description: Propose a notation or rendering capability
+title: "Feature: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use case and example notation
+    validations:
+      required: true
+  - type: textarea
+    id: prior_art
+    attributes:
+      label: Existing implementations or notation references

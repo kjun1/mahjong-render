@@ -1,0 +1,9 @@
+{
+  "name": "mahjong-render",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "vscode",
+  "workspaceFolder": "/workspaces/mahjong-render",
+  "postCreateCommand": "bundle install"
+}

@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.2", "3.3", "3.4"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Install SVG rasterizer
+        run: sudo apt-get update && sudo apt-get install -y librsvg2-bin
+      - name: Lint, test, and build example
+        run: bundle exec rake lint test assets:check licenses:check example:build
+      - name: Build and install gem locally
+        run: |
+          gem_version="$(ruby -Ilib -rmahjong_render/version -e 'print MahjongRender::VERSION')"
+          gem_path="tmp/mahjong-render-${gem_version}.gem"
+          gem build mahjong-render.gemspec --output "$gem_path"
+          ruby script/check_package.rb "$gem_path"
+          gem install --local --install-dir tmp/gem-home --no-document "$gem_path"
+          GEM_HOME="$PWD/tmp/gem-home" GEM_PATH="$PWD/tmp/gem-home" ruby -rmahjong_render -e 'File.write("tmp/readme-hand.svg", MahjongRender.render("405m456p789s12344z"))'
+          test -s tmp/readme-hand.svg
+          printf '= Mahjong hand\n\nmahjong::405m456p789s12344z[]\n' > tmp/hand.adoc
+          RUBYLIB="$PWD/tmp/gem-home/gems/mahjong-render-${gem_version}/lib:$(bundle show asciidoctor)/lib" ruby "$(bundle show asciidoctor)/bin/asciidoctor" -r mahjong_render/asciidoctor -o tmp/hand.html tmp/hand.adoc
+          ruby -e 'abort unless File.read("tmp/hand.html").include?("<svg ")'

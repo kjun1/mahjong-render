@@ -1,0 +1,9 @@
+= Mahjong Render Example
+
+== Basic hand
+
+mahjong::123m456p789s12344z[]
+
+== Red five
+
+mahjong::405m456p789s12344z[]

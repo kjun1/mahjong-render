@@ -1,0 +1,110 @@
+# mahjong-render
+
+[日本語版 README](README.ja.md)
+
+`mahjong-render` is a Ruby library that turns compact riichi mahjong notation into a self-contained SVG. It also provides an optional block macro for Ruby Asciidoctor. Rendering works offline and does not require Node.js, a browser, a font, or a network service.
+
+## Example output
+
+`405m456p789s12344z` renders as:
+
+![A mahjong hand showing three character tiles, three circle tiles, three bamboo tiles, and five wind tiles. The second tile is a red five.](examples/hand.png)
+
+The `0m` in `405m` is a red five. The preview is generated from the library's SVG output.
+
+## Install and render
+
+Requirements: Ruby 3.2 or newer.
+
+Until the first RubyGems release, build and install this checkout locally:
+
+```sh
+gem build mahjong-render.gemspec
+gem install --local ./mahjong-render-0.1.0.gem
+```
+
+After the gem is published, install it from RubyGems instead:
+
+```sh
+gem install mahjong-render
+```
+
+Render a hand from the command line or from Ruby:
+
+```sh
+ruby -rmahjong_render -e 'print MahjongRender.render("405m456p789s12344z")' > hand.svg
+```
+
+```ruby
+require "mahjong_render"
+
+svg = MahjongRender.render("405m456p789s12344z")
+File.write("hand.svg", svg)
+```
+
+The result is one SVG string with tile images embedded as data URIs. It can be saved as a file or inserted into HTML. The tile count is unrestricted; the library draws the sequence and does not check whether it is a legal hand.
+
+## AsciiDoc usage
+
+Install Asciidoctor separately, then load the adapter using the usual Ruby Asciidoctor `-r` option. These commands create `hand.html` from a standalone document:
+
+```sh
+gem install asciidoctor
+printf '= Mahjong hand\n\nmahjong::405m456p789s12344z[]\n' > hand.adoc
+asciidoctor -r mahjong_render/asciidoctor hand.adoc
+```
+
+See [the complete AsciiDoc example](examples/basic.adoc) for two hands.
+
+The adapter supports the HTML5 backend. Macro attributes, inline macros, and PDF output are not part of v0.1.0. The Ruby rendering API does not load Asciidoctor.
+
+## Supported notation
+
+| Form | Meaning |
+| --- | --- |
+| `1m`–`9m` | Characters (manzu) |
+| `1p`–`9p` | Circles (pinzu) |
+| `1s`–`9s` | Bamboo (souzu) |
+| `1z`–`4z` | East, South, West, North |
+| `5z`–`7z` | White, Green, Red dragon |
+| `0m`, `0p`, `0s` | Red five in the corresponding suit |
+
+Digits can share a suit suffix: `123m` means `1m 2m 3m`, and `405m` means `4m 0m 5m`. Therefore `10m` is two tiles (`1m 0m`), not a rank-ten tile. Whitespace is allowed between complete groups, not between digits and their suit suffix.
+
+Invalid notation raises `MahjongRender::NotationError`, with `token`, zero-based character `position`, and `reason` readers. Examples include `8z`, `123x`, `1m!`, a missing suit, and empty input. For example, `MahjongRender.render("8z")` raises an error with `token == "8z"` and `position == 0`.
+
+## Architecture
+
+```text
+notation → strict Ruby parser → ordered tile codes → SVG composer
+                                               ↑
+                                  pinned CC0 tile artwork
+
+AsciiDoc → Ruby Asciidoctor block macro → MahjongRender.render
+```
+
+The parser and SVG composer are intentionally small. Existing renderers were evaluated before this choice; [the research](docs/research/existing-renderers.md) and [decision records](docs/adr/) explain why they were not used as Ruby runtime dependencies.
+
+## Development
+
+Open this repository in a devcontainer, or use Ruby 3.2 or newer with Bundler and `rsvg-convert` installed:
+
+```sh
+bundle install
+bundle exec rake lint test assets:check licenses:check example:build
+gem build mahjong-render.gemspec
+ruby script/check_package.rb mahjong-render-0.1.0.gem
+```
+
+The example HTML is written to `tmp/basic.html`. The test suite rasterizes a sample SVG to confirm the embedded vector artwork renders.
+The [release guide](docs/release.md) describes the manual and tag-triggered Trusted Publishing workflows.
+
+To regenerate the README preview with `rsvg-convert`:
+
+```sh
+ruby -Ilib -rmahjong_render -e 'print MahjongRender.render("405m456p789s12344z")' | rsvg-convert -w 1200 -o examples/hand.png
+```
+
+## Third-party components and license
+
+Copyright 2026 Maejima Kenya. The project Ruby code and text documentation are licensed under [Apache-2.0](LICENSE). The bundled tile artwork and the [README preview](examples/hand.png) are CC0-1.0. The artwork comes from [FluffyStuff/riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles); see [third-party notices](THIRD_PARTY_NOTICES.md), [the asset manifest](assets/manifest.json), and [the CC0 legal text](LICENSES/CC0-1.0.txt). The gem metadata lists both licenses; each applies to the components described here.
