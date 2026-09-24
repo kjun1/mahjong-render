@@ -26,7 +26,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y librsvg2-bin
       - name: Lint, test, and build example
         run: bundle exec rake lint test assets:check licenses:check example:build
-      - name: Build and install gem locally
+      - name: Build and install gem from local package
         run: |
           export SOURCE_DATE_EPOCH="$(git show -s --format=%ct HEAD)"
           gem_version="$(ruby -Ilib -rmahjong_render/version -e 'print MahjongRender::VERSION')"
@@ -36,7 +36,7 @@ jobs:
           gem build mahjong-render.gemspec --output "$RUNNER_TEMP/mahjong-render-${gem_version}.gem"
           cmp "$gem_path" "$RUNNER_TEMP/mahjong-render-${gem_version}.gem"
           ruby script/check_package.rb "$gem_path"
-          gem install --local --install-dir tmp/gem-home --no-document "$gem_path"
+          gem install --install-dir tmp/gem-home --no-document "$gem_path"
           GEM_HOME="$PWD/tmp/gem-home" GEM_PATH="$PWD/tmp/gem-home" ruby -rmahjong_render -e 'File.write("tmp/readme-hand.svg", MahjongRender.render("405m456p789s12344z"))'
           test -s tmp/readme-hand.svg
           printf '= Mahjong hand\n\nmahjong::405m456p789s12344z[]\n' > tmp/hand.adoc
