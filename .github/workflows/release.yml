@@ -1,12 +1,6 @@
 name: Publish gem
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: Gem version on main, for example 0.1.0
-        required: true
-        type: string
   push:
     tags:
       - "v*"
@@ -23,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ["3.2", "3.3", "3.4"]
+        ruby: ["3.3", "3.4", "4.0"]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -43,12 +37,11 @@ jobs:
     timeout-minutes: 20
     environment: release
     permissions:
-      contents: read
+      contents: write
       id-token: write
-    env:
-      REQUESTED_VERSION: ${{ inputs.version }}
+      attestations: write
     steps:
-      - name: Check out release ref
+      - name: Check out release tag
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
@@ -57,36 +50,34 @@ jobs:
         uses: ruby/setup-ruby@762794c140bbeda0f1224786aa33b4b46783a6c1 # v1
         with:
           ruby-version: "3.4"
-      - name: Validate release ref and gem version
+      - name: Validate release tag and gem version
         run: |
-          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
-            [[ "$GITHUB_REF" == "refs/heads/main" ]] || { echo "Manual releases must run from main"; exit 1; }
-            release_version="$REQUESTED_VERSION"
-          else
-            [[ "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Invalid release tag"; exit 1; }
-            git fetch --no-tags origin main
-            git merge-base --is-ancestor HEAD FETCH_HEAD || { echo "Release tag must point to a commit on main"; exit 1; }
-            release_version="${GITHUB_REF_NAME#v}"
-          fi
-          [[ "$release_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Invalid gem version"; exit 1; }
+          [[ "$GITHUB_REF" == "refs/tags/$GITHUB_REF_NAME" ]] || { echo "Release requires a tag"; exit 1; }
+          [[ "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Invalid release tag"; exit 1; }
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor HEAD FETCH_HEAD || { echo "Release tag must point to a commit on main"; exit 1; }
+          release_version="${GITHUB_REF_NAME#v}"
           gem_version="$(ruby -Ilib -rmahjong_render/version -e 'print MahjongRender::VERSION')"
-          [[ "$release_version" == "$gem_version" ]] || { echo "Release ref and gem version differ"; exit 1; }
+          [[ "$release_version" == "$gem_version" ]] || { echo "Release tag and gem version differ"; exit 1; }
           echo "RELEASE_VERSION=$release_version" >> "$GITHUB_ENV"
-      - name: Build and check gem
+          echo "SOURCE_DATE_EPOCH=$(git show -s --format=%ct HEAD)" >> "$GITHUB_ENV"
+      - name: Build and check reproducible gem
         run: |
           mkdir -p pkg
-          gem build mahjong-render.gemspec --output "pkg/mahjong-render-${RELEASE_VERSION}.gem"
-          ruby script/check_package.rb "pkg/mahjong-render-${RELEASE_VERSION}.gem"
-      - name: Check whether this version is already published
+          gem_path="pkg/mahjong-render-${RELEASE_VERSION}.gem"
+          gem build mahjong-render.gemspec --output "$gem_path"
+          gem build mahjong-render.gemspec --output "$RUNNER_TEMP/mahjong-render-${RELEASE_VERSION}.gem"
+          cmp "$gem_path" "$RUNNER_TEMP/mahjong-render-${RELEASE_VERSION}.gem"
+          ruby script/check_package.rb "$gem_path"
+      - name: Check whether this exact gem is already published
         id: availability
         run: |
           metadata_file="$RUNNER_TEMP/mahjong-render-version.json"
           status="$(curl --silent --show-error --output "$metadata_file" --write-out '%{http_code}' "https://rubygems.org/api/v2/rubygems/mahjong-render/versions/${RELEASE_VERSION}.json")"
           case "$status" in
             200)
-              ruby -rjson -e 'data = JSON.parse(File.read(ARGV.fetch(0))); abort "published version belongs to another source" unless data.dig("metadata", "source_code_uri") == "https://github.com/kjun1/mahjong-render"' "$metadata_file"
+              ruby script/check_published_gem.rb "$metadata_file" "pkg/mahjong-render-${RELEASE_VERSION}.gem"
               echo "publish=false" >> "$GITHUB_OUTPUT"
-              echo "Version ${RELEASE_VERSION} is already published"
               ;;
             404)
               echo "publish=true" >> "$GITHUB_OUTPUT"
@@ -102,3 +93,45 @@ jobs:
       - name: Publish gem
         if: steps.availability.outputs.publish == 'true'
         run: gem push "pkg/mahjong-render-${RELEASE_VERSION}.gem"
+      - name: Verify published gem
+        run: |
+          metadata_file="$RUNNER_TEMP/mahjong-render-version.json"
+          for attempt in {1..12}; do
+            status="$(curl --silent --show-error --output "$metadata_file" --write-out '%{http_code}' "https://rubygems.org/api/v2/rubygems/mahjong-render/versions/${RELEASE_VERSION}.json")"
+            if [[ "$status" == 200 ]]; then
+              ruby script/check_published_gem.rb "$metadata_file" "pkg/mahjong-render-${RELEASE_VERSION}.gem"
+              exit 0
+            fi
+            [[ "$status" == 404 ]] || { echo "RubyGems version lookup failed: HTTP $status"; exit 1; }
+            sleep 5
+          done
+          echo "Published Gem did not appear on RubyGems"
+          exit 1
+      - name: Attest published gem
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: pkg/mahjong-render-${{ env.RELEASE_VERSION }}.gem
+      - name: Create or verify GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gem_name="mahjong-render-${RELEASE_VERSION}.gem"
+          gem_path="pkg/$gem_name"
+          if gh release view "$GITHUB_REF_NAME" --json tagName >/dev/null 2>&1; then
+            asset_count="$(gh release view "$GITHUB_REF_NAME" --json assets --jq ".assets | map(select(.name == \"$gem_name\")) | length")"
+            if [[ "$asset_count" == 0 ]]; then
+              gh release upload "$GITHUB_REF_NAME" "$gem_path"
+            else
+              mkdir -p "$RUNNER_TEMP/release-asset"
+              gh release download "$GITHUB_REF_NAME" --pattern "$gem_name" --dir "$RUNNER_TEMP/release-asset"
+              cmp "$gem_path" "$RUNNER_TEMP/release-asset/$gem_name"
+            fi
+            if [[ "$(gh release view "$GITHUB_REF_NAME" --json isDraft --jq .isDraft)" == true ]]; then
+              gh release edit "$GITHUB_REF_NAME" --draft=false
+            fi
+          else
+            notes_file="$RUNNER_TEMP/release-notes.md"
+            awk -v version="$RELEASE_VERSION" 'index($0, "## " version " ") == 1 { in_section=1; next } in_section && /^## / { exit } in_section { print }' CHANGELOG.md > "$notes_file"
+            [[ -s "$notes_file" ]] || { echo "Missing changelog entry"; exit 1; }
+            gh release create "$GITHUB_REF_NAME" "$gem_path" --verify-tag --title "$GITHUB_REF_NAME" --notes-file "$notes_file"
+          fi

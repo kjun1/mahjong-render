@@ -15,11 +15,17 @@ abort "unexpected gem name or version" unless spec.name == "mahjong-render" && s
 abort "incorrect gem licenses" unless spec.licenses.sort == %w[Apache-2.0 CC0-1.0].sort
 abort "incorrect gem author" unless spec.authors == ["Maejima Kenya"]
 abort "missing gem homepage" unless spec.homepage == "https://github.com/kjun1/mahjong-render"
+abort "incorrect Ruby requirement" unless spec.required_ruby_version.to_s == ">= 3.3"
+tag = "v#{MahjongRender::VERSION}"
+abort "incorrect source URL" unless spec.metadata["source_code_uri"] == "https://github.com/kjun1/mahjong-render/tree/#{tag}"
+abort "incorrect changelog URL" unless spec.metadata["changelog_uri"] == "https://github.com/kjun1/mahjong-render/blob/#{tag}/CHANGELOG.md"
+abort "incorrect documentation URL" unless spec.metadata["documentation_uri"] == "https://github.com/kjun1/mahjong-render/blob/#{tag}/docs/api.md"
 abort "gem file list differs from its contents" unless spec.files.sort == files.sort
 
 required = %w[LICENSE LICENSES/CC0-1.0.txt THIRD_PARTY_NOTICES.md README.md README.ja.md
-              CHANGELOG.md CONTRIBUTING.md SECURITY.md assets/manifest.json assets/tiles/Front.svg
-              examples/basic.adoc examples/hand.png docs/adr/0002-license.md docs/research/existing-renderers.md]
+              CHANGELOG.md CONTRIBUTING.md SECURITY.md SUPPORT.md CODE_OF_CONDUCT.md docs/api.md
+              assets/manifest.json assets/tiles/Front.svg examples/basic.adoc examples/hand.png
+              docs/adr/0002-license.md docs/research/existing-renderers.md]
 missing = required - files
 abort "missing gem files: #{missing.join(', ')}" unless missing.empty?
 
