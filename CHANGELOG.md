@@ -2,7 +2,7 @@
 
 All notable changes will be recorded here. Versions follow Semantic Versioning.
 
-## 0.1.0 — Unreleased
+## 0.1.0 — 2026-09-24
 
 - Render compact manzu, pinzu, souzu, honor, and red-five notation to self-contained SVG.
 - Support adjustable spacing between tile groups in compact notation.

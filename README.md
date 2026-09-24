@@ -16,17 +16,17 @@ The `0m` in `405m` is a red five. The preview is generated from the library's SV
 
 Requirements: Ruby 3.2 or newer.
 
-Until the first RubyGems release, build and install this checkout locally:
+Install the published gem from RubyGems:
+
+```sh
+gem install mahjong-render
+```
+
+To install a build from a local checkout:
 
 ```sh
 gem build mahjong-render.gemspec
 gem install --local ./mahjong-render-0.1.0.gem
-```
-
-After the gem is published, install it from RubyGems instead:
-
-```sh
-gem install mahjong-render
 ```
 
 Render a hand from the command line or from Ruby:

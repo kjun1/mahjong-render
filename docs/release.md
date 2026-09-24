@@ -3,8 +3,9 @@
 1. Confirm `CHANGELOG.md` and `lib/mahjong_render/version.rb` use the intended SemVer version. Recheck that `mahjong-render` is available on RubyGems; a prior missing-name response does not reserve it.
 2. In the devcontainer, run `bundle exec rake lint test assets:check licenses:check example:build`, `gem build mahjong-render.gemspec`, and `ruby script/check_package.rb mahjong-render-0.1.0.gem`. Confirm the build has no warnings.
 3. Install the built gem locally and reproduce the Ruby and AsciiDoc commands in both READMEs without network access. Inspect the gem contents and confirm the Apache-2.0 license, CC0 legal text, artwork, notices, preview image, examples, and linked documentation are present.
-4. Make the initial commit and create the public `kjun1/mahjong-render` GitHub repository. Confirm the homepage and gem metadata URLs resolve, verify CI on the default branch, and enable GitHub private vulnerability reporting.
-5. Review and date the 0.1.0 changelog entry. Configure Trusted Publishing as described below. Only after the release is approved, choose one of the release triggers. GitHub and RubyGems publication are outside this preparation task.
+4. For the first release, create the public `kjun1/mahjong-render` GitHub repository. Confirm the homepage and gem metadata URLs resolve, verify CI on the default branch, and enable GitHub private vulnerability reporting.
+5. Review and date the 0.1.0 changelog entry. Configure Trusted Publishing as described below, then choose one of the release triggers.
+6. After publication, confirm the RubyGems version and ownership, install the gem from RubyGems, and check that the pending publisher became a trusted publisher.
 
 ## Trusted Publishing setup
 

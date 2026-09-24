@@ -14,14 +14,20 @@
 
 ## インストールと描画
 
-Ruby 3.2 以上が必要です。RubyGems での初回公開前は、このリポジトリを取得してローカルで gem をビルド・インストールしてください。
+Ruby 3.2 以上が必要です。RubyGems からインストールします。
+
+```sh
+gem install mahjong-render
+```
+
+このリポジトリのローカルビルドをインストールする場合は、次のコマンドを使います。
 
 ```sh
 gem build mahjong-render.gemspec
 gem install --local ./mahjong-render-0.1.0.gem
 ```
 
-RubyGems で公開された後は `gem install mahjong-render` でインストールできます。インストール後、次のコマンドで `hand.svg` を作成できます。
+インストール後、次のコマンドで `hand.svg` を作成できます。
 
 ```sh
 ruby -rmahjong_render -e 'print MahjongRender.render("405m456p789s12344z")' > hand.svg
