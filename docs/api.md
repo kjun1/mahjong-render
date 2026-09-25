@@ -16,7 +16,8 @@ Invalid notation raises `MahjongRender::NotationError`. Its `token` reader ident
 Install Ruby Asciidoctor 2.x separately and load `mahjong_render/asciidoctor` to register the `mahjong` block macro:
 
 ```asciidoc
+.Current hand
 mahjong::405m456p789s12344z[]
 ```
 
-The adapter supports the HTML5 backend. It raises `MahjongRender::UnsupportedBackendError` for other backends and `MahjongRender::UnsupportedAttributeError` for macro attributes. Invalid notation raises `MahjongRender::NotationError`. Inline macros and PDF output are unsupported. Loading `mahjong_render` alone does not load Asciidoctor.
+Standard AsciiDoc block titles (`.Title` on the line before the macro) are supported and rendered above the tiles. The adapter supports the HTML5 backend. It raises `MahjongRender::UnsupportedBackendError` for other backends and `MahjongRender::UnsupportedAttributeError` for attributes written inside the macro's `[]`. Invalid notation raises `MahjongRender::NotationError`. Inline macros and PDF output are unsupported. Loading `mahjong_render` alone does not load Asciidoctor.
