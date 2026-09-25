@@ -2,6 +2,10 @@
 
 All notable changes will be recorded here. Versions follow Semantic Versioning.
 
+## 0.2.2 — 2026-09-25
+
+- Support standard AsciiDoc block titles on the `mahjong` block macro while continuing to reject unsupported macro attributes.
+
 ## 0.2.1 — 2026-09-25
 
 - Use the GitHub account name `kjun1` in copyright notices and RubyGems author metadata.

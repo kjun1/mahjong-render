@@ -29,7 +29,7 @@ To install a build from a local checkout:
 
 ```sh
 gem build mahjong-render.gemspec
-gem install --local ./mahjong-render-0.2.1.gem
+gem install --local ./mahjong-render-0.2.2.gem
 ```
 
 Render a hand from the command line or from Ruby:
@@ -61,7 +61,7 @@ See [the complete AsciiDoc example](examples/basic.adoc) for hands with and with
 
 To show separate groups, insert `|` between complete tile groups: `mahjong::123m|456p|789s[]`. Each `|` adds a quarter tile width of empty space, the same as `|(0.25)`. Use `|(0.5)` for half a tile width or `|(1)` for a full tile width, for example `mahjong::123m|(0.5)456p[]`.
 
-The adapter supports the HTML5 backend. Macro attributes, inline macros, and PDF output are unsupported. The Ruby rendering API does not load Asciidoctor.
+The adapter supports the HTML5 backend and standard AsciiDoc block titles such as `.Current hand` immediately before the macro. Attributes written inside the macro's `[]`, inline macros, and PDF output are unsupported. The Ruby rendering API does not load Asciidoctor.
 
 ## Supported notation
 
@@ -106,7 +106,7 @@ Open this repository in a devcontainer, or use a supported MRI Ruby with Bundler
 bundle install
 bundle exec rake lint test assets:check licenses:check example:build
 gem build mahjong-render.gemspec
-ruby script/check_package.rb mahjong-render-0.2.1.gem
+ruby script/check_package.rb mahjong-render-0.2.2.gem
 ```
 
 The example HTML is written to `tmp/basic.html`. The test suite rasterizes a sample SVG to confirm the embedded vector artwork renders.

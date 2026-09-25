@@ -27,7 +27,7 @@ gem install mahjong-render
 
 ```sh
 gem build mahjong-render.gemspec
-gem install --local ./mahjong-render-0.2.1.gem
+gem install --local ./mahjong-render-0.2.2.gem
 ```
 
 インストール後、次のコマンドで `hand.svg` を作成できます。
@@ -57,7 +57,7 @@ printf '= Mahjong hand\n\nmahjong::405m456p789s12344z[]\n' > hand.adoc
 asciidoctor -r mahjong_render/asciidoctor hand.adoc
 ```
 
-間隔の違う牌列を含む [AsciiDoc の例](examples/basic.adoc) もあります。拡張は HTML5 の block macro に対応します。macro 属性、inline macro、PDF 出力には対応しません。
+間隔の違う牌列を含む [AsciiDoc の例](examples/basic.adoc) もあります。拡張は HTML5 の block macro に対応し、macro の直前に置く `.現在の手牌` のような標準 AsciiDoc block title も描画します。macro の `[]` 内に書く属性、inline macro、PDF 出力には対応しません。
 
 牌のまとまりを少し離して見せるには、完成したグループの間に `|` を入れます。たとえば `mahjong::123m|456p|789s[]` と書きます。`|` は牌幅の4分の1の空白を追加し、`|(0.25)` と同じ幅です。幅を変える場合は `mahjong::123m|(0.5)456p[]` のように書けます。
 
@@ -92,7 +92,7 @@ devcontainer、または保証対象の MRI Ruby・Bundler・`rsvg-convert` を�
 bundle install
 bundle exec rake lint test assets:check licenses:check example:build
 gem build mahjong-render.gemspec
-ruby script/check_package.rb mahjong-render-0.2.1.gem
+ruby script/check_package.rb mahjong-render-0.2.2.gem
 ```
 
 設計の経緯は [既存ライブラリの調査](docs/research/existing-renderers.md) と [ADR](docs/adr/) に記録しています。

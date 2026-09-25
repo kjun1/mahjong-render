@@ -18,10 +18,15 @@ module MahjongRender
 
       def process(parent, target, attrs)
         raise UnsupportedBackendError, "mahjong block macro supports HTML output only" unless parent.document.basebackend?("html")
-        raise UnsupportedAttributeError, "mahjong block macro does not support attributes: #{attrs.keys.join(', ')}" unless attrs.empty?
+        unsupported_attrs = attrs.keys - ["title"]
+        unless unsupported_attrs.empty?
+          message = "mahjong block macro does not support attributes: #{unsupported_attrs.join(', ')}"
+          raise UnsupportedAttributeError, message
+        end
 
         svg = MahjongRender.render(target)
-        create_pass_block(parent, %(<div class="mahjong-render">#{svg}</div>), {}, subs: nil)
+        title_html = attrs.key?("title") ? %(<div class="title">#{attrs["title"]}</div>\n) : ""
+        create_pass_block(parent, %(<div class="mahjong-render">#{title_html}#{svg}</div>), attrs, subs: nil)
       end
     end
   end
