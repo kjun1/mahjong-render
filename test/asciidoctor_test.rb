@@ -18,8 +18,8 @@ class AsciidoctorTest < Minitest::Test
 
   def test_supports_standard_block_title
     html = Asciidoctor.convert(".Current hand\nmahjong::1m[]", safe: :safe)
-    assert_includes html, '<div class="title">Current hand</div>'
-    assert_includes html, '<div class="mahjong-render">'
+    assert_includes html, %(<div class="title">Current hand</div>)
+    assert_includes html, %(<div class="mahjong-render">)
   end
 
   def test_rejects_unsupported_attributes
