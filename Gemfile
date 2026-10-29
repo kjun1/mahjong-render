@@ -12,5 +12,5 @@ group :development, :test do
   gem "minitest", "~> 6.0"
   gem "rake", "~> 13.0"
   gem "rexml", "~> 3.0"
-  gem "rubocop", "~> 1.0", require: false
+  gem "rubocop", "~> 1.92", require: false
 end
