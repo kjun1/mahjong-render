@@ -27,7 +27,7 @@ gem install mahjong-render
 
 ```sh
 gem build mahjong-render.gemspec
-gem install --local ./mahjong-render-0.2.2.gem
+gem install --local ./mahjong-render-0.2.3.gem
 ```
 
 インストール後、次のコマンドで `hand.svg` を作成できます。
@@ -92,7 +92,7 @@ devcontainer、または保証対象の MRI Ruby・Bundler・`rsvg-convert` を�
 bundle install
 bundle exec rake lint test assets:check licenses:check example:build
 gem build mahjong-render.gemspec
-ruby script/check_package.rb mahjong-render-0.2.2.gem
+ruby script/check_package.rb mahjong-render-0.2.3.gem
 ```
 
 設計の経緯は [既存ライブラリの調査](docs/research/existing-renderers.md) と [ADR](docs/adr/) に記録しています。
