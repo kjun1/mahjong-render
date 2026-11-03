@@ -29,7 +29,7 @@ To install a build from a local checkout:
 
 ```sh
 gem build mahjong-render.gemspec
-gem install --local ./mahjong-render-0.2.2.gem
+gem install --local ./mahjong-render-0.2.3.gem
 ```
 
 Render a hand from the command line or from Ruby:
@@ -106,7 +106,7 @@ Open this repository in a devcontainer, or use a supported MRI Ruby with Bundler
 bundle install
 bundle exec rake lint test assets:check licenses:check example:build
 gem build mahjong-render.gemspec
-ruby script/check_package.rb mahjong-render-0.2.2.gem
+ruby script/check_package.rb mahjong-render-0.2.3.gem
 ```
 
 The example HTML is written to `tmp/basic.html`. The test suite rasterizes a sample SVG to confirm the embedded vector artwork renders.

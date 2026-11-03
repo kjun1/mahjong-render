@@ -2,6 +2,11 @@
 
 All notable changes will be recorded here. Versions follow Semantic Versioning.
 
+## 0.2.3 — 2026-11-03
+
+- Update RuboCop and its development dependencies.
+- Update the pinned Ruby setup action used by CI and releases.
+
 ## 0.2.2 — 2026-09-25
 
 - Support standard AsciiDoc block titles on the `mahjong` block macro while continuing to reject unsupported macro attributes.
