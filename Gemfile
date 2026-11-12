@@ -9,7 +9,7 @@ gemspec
 
 group :development, :test do
   gem "asciidoctor", "~> 2.0"
-  gem "minitest", "~> 6.0"
+  gem "minitest", "~> 6.1"
   gem "rake", "~> 13.0"
   gem "rexml", "~> 3.0"
   gem "rubocop", "~> 1.92", require: false
